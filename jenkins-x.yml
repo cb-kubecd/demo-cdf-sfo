@@ -1,1 +1,10 @@
 buildPack: go
+pipelineConfig:
+  pipelines:
+    pullRequest:
+      preBuild:
+        steps:
+        - image: busybox
+          command: echo
+          args:
+          - ZZZZZZZZZZZZZZZZZ
