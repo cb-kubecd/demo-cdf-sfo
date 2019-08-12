@@ -1,0 +1,99 @@
+Step: step-credential-initializer-dpmsp:
+
+{"level":"warn","ts":1565646082.2272153,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/master\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1565646082.229763,"logger":"fallback-logger","caller":"creds-init/main.go:40","msg":"Credentials initialized."}
+Step: step-working-dir-initializer-bx**z:
+
+{"level":"warn","ts":1565646083.5069904,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: open /var/run/ko/HEAD: no such file or directory"}
+{"level":"info","ts":1565646083.5082204,"logger":"fallback-logger","caller":"bash/main.go:65","msg":"Successfully executed command \"mkdir -p /workspace/source /workspace/source/charts/preview\""}
+Step: step-place-tools:
+
+Step: step-git-source-cb-kubecd-demo-cdf-sfo-pr-1-pro-xqx25:
+
+{"level":"warn","ts":1565646090.5733972,"logger":"fallback-logger","caller":"logging/config.go:69","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/master\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1565646091.6847744,"logger":"fallback-logger","caller":"git/git.go:102","msg":"Successfully cloned https://github.com/cb-kubecd/demo-cdf-sfo.git @ ac591126f6b68056e2939929e57655b986f53e95 in path /workspace/source"}
+Step: step-git-merge:
+
+Using SHAs from PULL_REFS=master:876aee20ecf37a3714d96c789ab25d1fd7ff5b47,1:ac591126f6b68056e2939929e57655b986f53e95
+DEBUG: ran git fetch --unshallow origin ac591126f6b68056e2939929e57655b986f53e95: 876aee20ecf37a3714d96c789ab25d1fd7ff5b47: in 
+DEBUG: ran git checkout master in 
+DEBUG: ran git reset --hard 876aee20ecf37a3714d96c789ab25d1fd7ff5b47 in 
+DEBUG: ran clean --force -d . in 
+DEBUG: ran git merge ac591126f6b68056e2939929e57655b986f53e95 in 
+MERGED SHA SUBJECT
+ac591126f  fix: improve title message
+Step: step-prebuild-step2:
+
+ZZZZZZZZZZZZZZZZZ
+Step: step-build-make-linux:
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO15VENDOREXPERIMENT=1 go build -ldflags '' -o bin/demo-cdf-sfo main.go
+Step: step-build-container-build:
+
+[36mINFO[0m[0000] No base image, nothing to extract            
+[36mINFO[0m[0000] cmd: EXPOSE                                  
+[36mINFO[0m[0000] Adding exposed port: 8080/tcp                
+[36mINFO[0m[0000] Using files from context: [/workspace/source/bin] 
+[36mINFO[0m[0000] Skipping unpacking as no commands require it. 
+[36mINFO[0m[0000] Taking snapshot of full filesystem...        
+[36mINFO[0m[0000] EXPOSE 8080                                  
+[36mINFO[0m[0000] cmd: EXPOSE                                  
+[36mINFO[0m[0000] Adding exposed port: 8080/tcp                
+[36mINFO[0m[0000] No files changed in this command, skipping snapshotting. 
+[36mINFO[0m[0000] ENTRYPOINT ["/demo-cdf-sfo"]                 
+[36mINFO[0m[0000] No files changed in this command, skipping snapshotting. 
+[36mINFO[0m[0000] Using files from context: [/workspace/source/bin] 
+[36mINFO[0m[0000] COPY ./bin/ /                                
+[36mINFO[0m[0000] Taking snapshot of files...                  
+2019/08/12 21:41:44 pushed blob: sha256:9ccf4401e91bc129e3a69d8dbcde8363bc60b13b70cf2ef883a0339781916da6
+2019/08/12 21:41:45 pushed blob: sha256:4df86a9258b2d5fc810f7d2dbba2d3e1f93ee3518cac2eb24449b040394a979e
+2019/08/12 21:41:47 gcr.io/jenkinsx-dev/demo-cdf-sfo:0.0.0-SNAPSHOT-PR-1-1: digest: sha256:4fa2be0fb4944cf0a4ba872f444722fb41c4147c4526412df0c4b1342dcfa5a0 size: 428
+Step: step-postbuild-post-build:
+
+no CVE provider running in the current ** namespace so skip adding image to be analysed
+Step: step-promote-make-preview:
+
+sed -i -e "s/version:.*/version: 0.0.0-SNAPSHOT-PR-1-1/" Chart.yaml
+sed -i -e "s/version:.*/version: 0.0.0-SNAPSHOT-PR-1-1/" ../*/Chart.yaml
+sed -i -e "s|repository:.*|repository: gcr.io\/jenkinsx-dev\/demo-cdf-sfo|" values.yaml
+sed -i -e "s/tag:.*/tag: 0.0.0-SNAPSHOT-PR-1-1/" values.yaml
+echo "  version: 0.0.0-SNAPSHOT-PR-1-1" >> requirements.yaml
+** step helm build
+WARNING: No $CHART_REPOSITORY defined so using the default value of: http://jenkins-x-chartmuseum:8080
+Adding missing Helm repo: storage.googleapis.com https://storage.googleapis.com/chartmuseum.jenkins-x.io
+Successfully added Helm repository storage.googleapis.com.
+Adding missing Helm repo: jenkins-x-chartmuseum http://jenkins-x-chartmuseum:8080
+Successfully added Helm repository jenkins-x-chartmuseum.
+WARNING: No $CHART_REPOSITORY defined so using the default value of: http://jenkins-x-chartmuseum:8080
+Adding missing Helm repo: chartmuseum.jenkins-x.io http://chartmuseum.jenkins-x.io
+Successfully added Helm repository chartmuseum.jenkins-x.io.
+Step: step-promote-**-preview:
+
+Creating a preview
+Commit author email is empty for: ac591126f6b68056e2939929e57655b986f53e95
+Looking for commits in: /workspace/source/
+Found commit author match for: rawlingsj with email address: rawlingsj80@gmail.com
+Created environment cb-kubecd-demo-cdf-sfo-pr-1
+Namespace **-cb-kubecd-demo-cdf-sfo-pr-1 created 
+expose:
+  Annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+  config:
+    domain: 34.77.228.65.nip.io
+    exposer: Ingress
+    http: "true"
+preview:
+  image:
+    repository: gcr.io/jenkinsx-dev/demo-cdf-sfo
+    tag: 0.0.0-SNAPSHOT-PR-1-1
+Deleting and cloning the Jenkins X versions repo
+Cloning the Jenkins X versions repo https://github.com/jenkins-x/jenkins-x-versions.git with ref refs/heads/master to /builder/home/.**/jenkins-x-versions
+WARNING: failed to create system vault in namespace ** due to no "**-vault-jrawlings-int" vault found in namespace "**"
+
+
+Updating PipelineActivities cb-kubecd-demo-cdf-sfo-pr-1-1 which has status Running
+WARNING: preview application http://demo-cdf-sfo.**-cb-kubecd-demo-cdf-sfo-pr-1.34.77.228.65.nip.io not available, error was 503 503 Service Temporarily Unavailable, delaying for: 1.252573036s
+WARNING: preview application http://demo-cdf-sfo.**-cb-kubecd-demo-cdf-sfo-pr-1.34.77.228.65.nip.io not available, error was 503 503 Service Temporarily Unavailable, delaying for: 1.795078749s
+WARNING: preview application http://demo-cdf-sfo.**-cb-kubecd-demo-cdf-sfo-pr-1.34.77.228.65.nip.io not available, error was 503 503 Service Temporarily Unavailable, delaying for: 1.481238625s
+Preview application is now available at: http://demo-cdf-sfo.**-cb-kubecd-demo-cdf-sfo-pr-1.34.77.228.65.nip.io
